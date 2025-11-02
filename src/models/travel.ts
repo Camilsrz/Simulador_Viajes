@@ -1,4 +1,4 @@
-export interface Travel {
+export interface travel {
   id: number;
   destination: string;
   days: number;

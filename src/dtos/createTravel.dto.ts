@@ -1,4 +1,4 @@
-export interface CreateTravelDTO {
+export interface createTraveldto {
   destination: string;
   days: number;
   travelers: number;

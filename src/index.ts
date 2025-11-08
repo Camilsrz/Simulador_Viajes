@@ -1,104 +1,232 @@
+import PDFDocument from 'pdfkit';
 import express from 'express';
+import { Request, Response, NextFunction } from 'express';
 import {travel} from './models/travel';
 import { createTraveldto } from './dtos/createTravel.dto';
+import { pool } from './db';
+import { hashPassword, comparePassword, signToken } from './auth';
+import { createUserDto } from './dtos/createUser.dto';
+import { authMiddleware } from './middleware/authMiddleware';
+
 
 const app = express();
 app.use(express.json());
 
-let travels: travel[] = [];
-let nextId = 1;
+
+/** REGISTER */
+app.post('/auth/register', async (req, res) => {
+  try {
+    const body = req.body as createUserDto;
+    const { email, password, name } = body;
+
+    if (!email || !password) return res.status(400).json({ error: 'Email y contraseña son obligatorios' });
+
+    // Validar si existe
+    const exists = await pool.query('SELECT id FROM users WHERE email = $1', [email]);
+    if (exists.rows.length > 0) return res.status(409).json({ error: 'El email ya está registrado' });
+
+    const hashed = await hashPassword(password);
+
+    const result = await pool.query(
+      `INSERT INTO users (email, password, name) VALUES ($1,$2,$3) RETURNING id, email, name, role, created_at`,
+      [email, hashed, name || null]
+    );
+
+    const user = result.rows[0];
+    // Opcional: firmar token al registrarse
+    const token = signToken({ id: user.id, email: user.email, role: user.role });
+
+    res.status(201).json({ user, token });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Error al registrar usuario' });
+  }
+});
+
+/** LOGIN */
+app.post('/auth/login', async (req, res) => {
+  try {
+    const { email, password } = req.body as { email: string; password: string; };
+    if (!email || !password) return res.status(400).json({ error: 'Email y contraseña son obligatorios' });
+
+    const result = await pool.query('SELECT * FROM users WHERE email = $1', [email]);
+    if (result.rows.length === 0) return res.status(401).json({ error: 'Credenciales inválidas' });
+
+    const user = result.rows[0];
+    const match = await comparePassword(password, user.password);
+    if (!match) return res.status(401).json({ error: 'Credenciales inválidas' });
+
+    const token = signToken({ id: user.id, email: user.email, role: user.role });
+
+    // No devolver la contraseña
+    delete user.password;
+    res.json({ user, token });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Error al iniciar sesión' });
+  }
+});
+
 
 // POST CREAR
-app.post('/travels', (req,res) =>{
-  const travelData= req.body as createTraveldto;
+app.post('/travels', async (req, res) => {
+  try {
+    const travelData = req.body as createTraveldto;
+    const { destination, days, travelers, transport, lodging, activities, budgetPerPerson } = travelData;
 
-if (!travelData.destination || !travelData.days || !travelData.travelers || !travelData.transport || !travelData.lodging || !travelData.budgetPerPerson) {
-    return res.status(400).json({ error: 'Faltan datos obligatorios' });
+    const totalBudget = days * travelers * budgetPerPerson;
+
+    const result = await pool.query(
+      `INSERT INTO travels (destination, days, travelers, transport, lodging, activities, budgetPerPerson, totalBudget)
+       VALUES ($1,$2,$3,$4,$5,$6,$7,$8)
+       RETURNING *`,
+      [destination, days, travelers, transport, lodging, activities, budgetPerPerson, totalBudget]
+    );
+
+    res.status(201).json(result.rows[0]);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Error al crear el viaje' });
   }
-
-  const totalBudget = travelData.days * travelData.travelers * travelData.budgetPerPerson;
-  const newTravel: travel = {
-    id: nextId++,
-    ...travelData,
-    activities: travelData.activities || [], // asegurar que activities no sea undefined
-    totalBudget,
-    createdAt: new Date().toISOString(),
-  };
-
-  travels.push(newTravel);
-  res.status(201).json(newTravel)
 });
 
 // GET OBTENER
-app.get('/travels', (req, res) => {
-  res.json(travels);
+app.get('/travels', async (req, res) => {
+  const result = await pool.query('SELECT * FROM travels ORDER BY id ASC');
+  res.json(result.rows);
 });
+
 
 // GET OBTENER POR ID
-app.get('/travels/:id', (req, res) => {
+app.get('/travels/:id', async (req, res) => {
   const id = Number(req.params.id);
-  const travel = travels.find(t => t.id === id);
-
-  if (!travel) return res.status(404).json({ error: 'Viaje no encontrado' });
-  res.json(travel);
+  const result = await pool.query('SELECT * FROM travels WHERE id = $1', [id]);
+  if (result.rows.length === 0) return res.status(404).json({ error: 'Viaje no encontrado' });
+  res.json(result.rows[0]);
 });
 
+
 // PUT ACTUALIZAR
-app.put('/travels/:id', (req, res) => {
+app.put('/travels/:id', async (req, res) => {
   const id = Number(req.params.id);
-  const travel = travels.find(t => t.id === id);
-
-  if (!travel) return res.status(404).json({ error: 'Viaje no encontrado' });
-
   const update = req.body as Partial<createTraveldto>;
-  Object.assign(travel, update);
 
-  travel.totalBudget = travel.days * travel.travelers * travel.budgetPerPerson;
+  const result = await pool.query('SELECT * FROM travels WHERE id=$1', [id]);
+  if (result.rows.length === 0) return res.status(404).json({ error: 'Viaje no encontrado' });
 
-  res.json(travel);
+  const travel = result.rows[0];
+  const updated = { ...travel, ...update };
+  updated.totalbudget = updated.days * updated.travelers * updated.budgetperperson;
+
+  const updatedResult = await pool.query(
+    `UPDATE travels SET destination=$1, days=$2, travelers=$3, transport=$4, lodging=$5, activities=$6, budgetPerPerson=$7, totalBudget=$8 WHERE id=$9 RETURNING *`,
+    [updated.destination, updated.days, updated.travelers, updated.transport, updated.lodging, updated.activities, updated.budgetperperson, updated.totalbudget, id]
+  );
+
+  res.json(updatedResult.rows[0]);
 });
 
 // DELETE 
-app.delete('/travels/:id', (req, res) => {
-  const id= Number(req.params.id)
-  const index = travels.findIndex(t=>t.id ===id);
-  if (index=== -1) return res.status(404).json({error:'Viaje no encontrado'})
-  travels.splice(index, 1);
+function adminOnly(req: Request, res: Response, next: NextFunction) {
+  const user = (req as any).user;
+  if (!user || user.role !== 'admin') return res.status(403).json({ error: 'Forbidden' });
+  next();
+}
+app.delete('/travels/:id', authMiddleware, adminOnly, async (req, res) => {
+  const id = Number(req.params.id);
+  const result = await pool.query('DELETE FROM travels WHERE id = $1', [id]);
+  if (result.rowCount === 0) return res.status(404).json({ error: 'Viaje no encontrado' });
   res.status(204).send();
 });
 
-// GET OBTENER EXPORTACION
-app.get('/travels/:id/export', (req, res) => {
-  const id= Number(req.params.id);
-  const travel = travels.find(t => t.id === id);
-  
 
-  if (!travel) {
-    return res.status(404).json({ error: 'Presupuesto no encontrado' });
-  }
-  const format = (req.query.format as string) || 'pdf';
-  if (format !== 'pdf') {
-    return res.status(400).json({ error: 'Solo se permite exportar en formato PDF' });
-  }
+// PATCH ACTUALIZAR PARCIAL
+app.patch('/travels/:id', async (req, res) => {
+  const id = Number(req.params.id);
+  const existing = await pool.query('SELECT * FROM travels WHERE id=$1', [id]);
+  if (existing.rows.length === 0) return res.status(404).json({ error: 'Viaje no encontrado' });
+
+  const travel = existing.rows[0];
+  const updated = { ...travel, ...req.body };
+  updated.totalbudget = updated.days * updated.travelers * updated.budgetperperson;
+
+  const result = await pool.query(
+    `UPDATE travels
+     SET destination=$1, days=$2, travelers=$3, transport=$4, lodging=$5, activities=$6, budgetPerPerson=$7, totalBudget=$8
+     WHERE id=$9 RETURNING *`,
+    [updated.destination, updated.days, updated.travelers, updated.transport, updated.lodging, updated.activities, updated.budgetperperson, updated.totalbudget, id]
+  );
+
   res.json({
-    message: `Se exportó el viaje a ${travel.destination} en formato PDF`,
-    travelId: travel.id,
+    ...result.rows[0],
+    totalBudgetCOP: `${Number(result.rows[0].totalbudget).toLocaleString('es-CO')} COP`,
   });
 });
 
-// PATCH ACTUALIZAR PARCIAL
-app.patch('/travels/:id', (req, res) => {
-  const id = Number(req.params.id);
-  const travel = travels.find(t => t.id === id);
-  if (!travel) return res.status(404).json({ error: 'Presupuesto no encontrado' });
+// GET OBTENER EXPORTACION
+app.get('/travels/:id/export', authMiddleware, async (req, res) => {
+  try {
+    const id = Number(req.params.id);
+    const format = (req.query.format as string) || 'pdf';
 
-  Object.assign(travel, req.body);
-  travel.totalBudget = travel.days * travel.travelers * travel.budgetPerPerson;
+    if (format !== 'pdf') {
+      return res.status(400).json({ error: 'Solo se permite exportar en formato PDF' });
+    }
 
-  res.json({
-    ...travel,
-    totalBudgetCOP: `${travel.totalBudget.toLocaleString('es-CO')} COP`,
-  });
+    // Buscar el viaje en la base de datos
+    const result = await pool.query('SELECT * FROM travels WHERE id = $1', [id]);
+    if (result.rows.length === 0) {
+      return res.status(404).json({ error: 'Viaje no encontrado' });
+    }
+
+    const travel = result.rows[0];
+
+    // Configurar respuesta para descarga
+    res.setHeader('Content-Type', 'application/pdf');
+    res.setHeader('Content-Disposition', `attachment; filename=viaje-${id}.pdf`);
+
+    // Crear documento PDF
+    const doc = new PDFDocument();
+
+    // Enviar el documento directamente al cliente
+    doc.pipe(res);
+
+    // Título
+    doc.fontSize(20).text(`Presupuesto de viaje: ${travel.destination}`, { align: 'center' });
+    doc.moveDown();
+
+    // Detalles principales
+    doc.fontSize(12).text(`ID: ${travel.id}`);
+    doc.text(`Destino: ${travel.destination}`);
+    doc.text(`Días: ${travel.days}`);
+    doc.text(`Viajeros: ${travel.travelers}`);
+    doc.text(`Transporte: ${travel.transport}`);
+    doc.text(`Alojamiento: ${travel.lodging}`);
+    doc.text(`Presupuesto por persona: ${Number(travel.budgetperperson).toLocaleString('es-CO')} COP`);
+    doc.text(`Presupuesto total: ${Number(travel.totalbudget).toLocaleString('es-CO')} COP`);
+    doc.moveDown();
+
+    // Actividades
+    doc.fontSize(14).text('Actividades planeadas:', { underline: true });
+    if (travel.activities && travel.activities.length > 0) {
+      travel.activities.forEach((a: string, i: number) => {
+        doc.fontSize(12).text(`${i + 1}. ${a}`);
+      });
+    } else {
+      doc.fontSize(12).text('No se registraron actividades.');
+    }
+
+    // Fecha
+    doc.moveDown();
+    doc.fontSize(10).text(`Generado el: ${new Date().toLocaleString('es-CO')}`, { align: 'right' });
+
+    // Finalizar documento
+    doc.end();
+
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Error al generar el PDF' });
+  }
 });
 
 app.listen(3000, () => {

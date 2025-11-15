@@ -1,38 +1,185 @@
-.card {
-  border: 1px solid #ccc;
-  padding: 1rem;
-  margin: 1rem auto;
-  width: 90%;
-  max-width: 600px;
-  border-radius: 10px;
-  background: #fafafa;
-}
+/* ----------------------------- */
+/* 🌄 HERO HEADER */
+/* ----------------------------- */
 
-label {
-  display: block;
-  margin-top: 0.5rem;
-}
-
-button {
-  padding: 6px 10px;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-}
-
-.grid {
+.hero-header {
+  width: 100%;
+  height: 100vh; /* La imagen ocupa toda la altura de la pantalla */
+  background: url("https://espiral21.com/wp-content/uploads/2020/09/mmuerto-2.jpeg")
+    center/cover no-repeat;
   display: flex;
-  flex-wrap: wrap;
-  gap: 20px;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  text-shadow: 0 4px 8px rgba(0, 0, 0, 0.6); /* Sombra más suave para el texto */
+  padding: 20px;
+  background-size: cover;
+  position: relative;
+  overflow: hidden; /* Asegura que no se desborde la imagen */
 }
 
-.btn {
-  margin-top: 20px;
+/* Overlay con degradado */
+.hero-header::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(to bottom, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.7));
+  z-index: 1; /* Asegura que el overlay esté debajo del contenido */
+}
+
+.hero-title {
+  font-size: 56px; /* Título más grande para un impacto visual */
+  font-weight: 700;
+  text-align: center;
+  letter-spacing: 2px;
+  margin: 0;
+  font-family: 'Poppins', sans-serif; /* Tipografía moderna */
+  z-index: 2; /* Asegura que el título esté encima del overlay */
+}
+
+.hero-sub {
+  margin-top: 12px;
+  font-size: 20px;
+  opacity: 0.85;
+  font-family: 'Roboto', sans-serif; /* Tipografía más ligera */
+  z-index: 2; /* Asegura que el subtítulo esté encima del overlay */
+}
+
+/* ----------------------------- */
+/* 🟦 CONTENIDO PRINCIPAL */
+/* ----------------------------- */
+
+body, .page {
+  background: #f5f7fb; /* Fondo más suave y neutro */
+  font-family: 'Poppins', sans-serif;
+  color: #333; /* Texto más suave para mejorar la lectura */
+}
+
+/* Contenedor para las tarjetas y título en el centro de la pantalla */
+.wizard-wrapper {
+  max-width: 1100px;
+  margin: 0 auto; /* Centrado horizontal */
+  padding: 40px 50px;
+  background: white;
+  border-radius: 20px; /* Bordes redondeados */
+  box-shadow: 0 8px 40px rgba(0, 0, 0, 0.1); /* Sombra */
+  position: absolute; /* Posicionamiento absoluto sobre la imagen */
+  top: 50%; /* Centrado vertical */
+  left: 50%;
+  transform: translate(-50%, -50%); /* Centrado exacto */
+  z-index: 2; /* Asegura que el contenido esté encima de la imagen */
+}
+
+/* Botones de acción arriba */
+.wizard-actions {
+  width: 100%;
+  display: flex;
+  justify-content: flex-end;
+  gap: 18px;
+  margin-bottom: 40px;
+}
+
+.btn-small {
   padding: 12px 20px;
-  background: #4caf50;
+  font-size: 16px; /* Tamaño de fuente más grande */
+  border-radius: 10px;
+  background: #0b5cff;
   color: white;
   border: none;
-  border-radius: 6px;
   cursor: pointer;
+  font-weight: 600;
+  transition: 0.3s ease-in-out;
 }
 
+.btn-small:hover {
+  background: #0847c7;
+  transform: translateY(-4px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15); /* Sombra en hover */
+}
+
+.btn-small:focus {
+  outline: none;
+  box-shadow: 0 0 0 4px rgba(11, 92, 255, 0.5); /* Resalta el botón en focus */
+}
+
+/* ----------------------------- */
+/* 🟩 TARJETAS (DESTINOS) */
+/* ----------------------------- */
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 28px;
+  margin-bottom: 40px; /* Más espacio entre las tarjetas y el siguiente contenido */
+}
+
+.card-option {
+  position: relative;
+  height: 240px;
+  border-radius: 16px;
+  overflow: hidden;
+  cursor: pointer;
+  border: 3px solid transparent;
+  background: white;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12); /* Sombra más suave */
+  transition: 0.3s ease-in-out;
+}
+
+.card-option img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease-in-out; /* Animación en imagen */
+}
+
+.card-option:hover {
+  transform: translateY(-6px); /* Sutil animación al pasar el mouse */
+  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.18);
+  border-color: #0b5cff;
+}
+
+.card-option.selected {
+  border-color: #28a745;
+  box-shadow: 0 0 0 6px rgba(40, 167, 69, 0.25);
+}
+
+.overlay {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  padding: 20px;
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0.0) 10%, rgba(0, 0, 0, 0.7) 80%);
+  color: white;
+  font-weight: 700;
+  font-size: 18px;
+  text-shadow: 0 2px 6px rgba(0, 0, 0, 0.5);
+}
+
+.overlay h2 {
+  margin: 0;
+}
+
+/* Título del paso */
+.title-step {
+  text-align: center;
+  font-size: 32px; /* Título más grande */
+  margin-bottom: 35px;
+  font-weight: 700;
+  color: #0b5cff;
+}
+
+/* Botón siguiente */
+.wizard-buttons {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 32px;
+}
+
+.wizard-buttons .btn-small {
+  margin-left: 10px;
+  font-size: 18px; /* Mayor tamaño de fuente */
+}

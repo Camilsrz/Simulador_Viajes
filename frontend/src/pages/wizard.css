@@ -1,0 +1,168 @@
+/* ----------------------------- */
+/* 🌄 HERO HEADER */
+/* ----------------------------- */
+
+.hero-header {
+  width: 100%;
+  height: 100vh; /* La imagen ocupa toda la altura de la pantalla */
+  background: url("https://espiral21.com/wp-content/uploads/2020/09/mmuerto-2.jpeg")
+    center/cover no-repeat;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  text-shadow: 0 4px 8px rgba(0, 0, 0, 0.6); /* Sombra más suave para el texto */
+  padding: 20px;
+  background-size: cover;
+  position: relative;
+  overflow: hidden; /* Asegura que no se desborde la imagen */
+}
+
+/* ----------------------------- */
+/* 🟦 CONTENIDO PRINCIPAL */
+/* ----------------------------- */
+
+body, .page {
+  background: #f5f7fb; /* Fondo más suave y neutro */
+  font-family: 'Poppins', sans-serif;
+  color: #333; /* Texto más suave para mejorar la lectura */
+}
+
+.wizard-wrapper {
+  max-width: 1100px;
+  margin: 0 auto; /* Centrado horizontal */
+  padding: 40px 50px;
+  background: white;
+  border-radius: 20px; /* Bordes redondeados */
+  box-shadow: 0 8px 40px rgba(0, 0, 0, 0.1); /* Sombra */
+  position: absolute; /* Posicionamiento absoluto sobre la imagen */
+  top: 50%; /* Centrado vertical */
+  left: 50%;
+  transform: translate(-50%, -50%); /* Centrado exacto */
+  z-index: 2; /* Asegura que el contenido esté encima de la imagen */
+  display: flex;
+  flex-direction: column;
+  justify-content: center; /* Centrado verticalmente */
+  align-items: center; /* Centrado horizontalmente */
+}
+
+/* ----------------------------- */
+/* 🟩 SELECCIONAR DESTINO (SIMILAR A ALOJAMIENTO) */
+/* ----------------------------- */
+
+.title-step {
+  text-align: center;
+  font-size: 32px; /* Título más grande */
+  margin-bottom: 35px;
+  font-weight: 700;
+  color: #0b5cff;
+}
+
+/* Estilo para las tarjetas dentro de "Selecciona tu destino" */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 28px;
+  margin-bottom: 40px; /* Más espacio entre las tarjetas y el siguiente contenido */
+}
+
+.card-option {
+  position: relative;
+  height: 240px;
+  border-radius: 16px;
+  overflow: hidden;
+  cursor: pointer;
+  border: 3px solid transparent;
+  background: white;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12); /* Sombra más suave */
+  transition: 0.3s ease-in-out;
+}
+
+.card-option img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease-in-out; /* Animación en imagen */
+}
+
+.card-option:hover {
+  transform: translateY(-6px); /* Sutil animación al pasar el mouse */
+  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.18);
+  border-color: #0b5cff;
+}
+
+.card-option.selected {
+  border-color: #0b5cff;
+  box-shadow: 0 0 0 6px rgba(40, 167, 69, 0.25);
+}
+
+.overlay {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  padding: 20px;
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0.0) 10%, rgba(0, 0, 0, 0.7) 80%);
+  color: white;
+  font-weight: 700;
+  font-size: 18px;
+  text-shadow: 0 2px 6px rgba(0, 0, 0, 0.5);
+}
+
+.overlay h2 {
+  margin: 0;
+}
+
+/* Botón siguiente */
+.wizard-buttons {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 32px;
+}
+
+.wizard-buttons .btn-small {
+  margin-left: 10px;
+  font-size: 18px; /* Mayor tamaño de fuente */
+  padding: 12px 20px;
+  border-radius: 8px;
+  background: #0b5cff;
+  color: white;
+  border: none;
+  cursor: pointer;
+  font-weight: 600;
+  transition: 0.3s ease-in-out;
+}
+
+.wizard-buttons .btn-small:hover {
+  background: #0847c7;
+  transform: translateY(-4px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.wizard-buttons .btn-small:focus {
+  outline: none;
+  box-shadow: 0 0 0 4px rgba(11, 92, 255, 0.5);
+}
+
+/* Botón estándar usado en TODO el wizard */
+.btn {
+  padding: 12px 20px;
+  background: #0b5cff;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.3s ease;
+}
+
+.btn:hover:not(:disabled) {
+  background: #0847c7;
+  transform: translateY(-2px);
+}
+
+.btn:disabled {
+  background: #a5b8f7;
+  cursor: not-allowed;
+  transform: none;
+}

@@ -3,7 +3,11 @@ import LoginForm from '../components/LoginForm';
 import RegisterForm from '../components/RegisterForm';
 import '../auth.css';
 
-export default function AuthPage() {
+interface AuthPageProps {
+  onLoginSuccess: () => void;
+}
+
+export default function AuthPage({ onLoginSuccess }: AuthPageProps) {
   const [showLogin, setShowLogin] = useState(true);
 
   return (
@@ -21,7 +25,8 @@ export default function AuthPage() {
       <div className="form">
         {showLogin ? (
           <>
-            <LoginForm onAuth={() => window.location.reload()} />
+            <LoginForm onAuth={onLoginSuccess} />
+
             <p>
               ¿No tienes cuenta?{' '}
               <a href="#" onClick={() => setShowLogin(false)}>Regístrate aquí</a>
@@ -30,6 +35,7 @@ export default function AuthPage() {
         ) : (
           <>
             <RegisterForm onAuth={() => setShowLogin(true)} />
+
             <p>
               ¿Ya tienes cuenta?{' '}
               <a href="#" onClick={() => setShowLogin(true)}>Inicia sesión</a>
@@ -40,4 +46,5 @@ export default function AuthPage() {
     </div>
   );
 }
+
 

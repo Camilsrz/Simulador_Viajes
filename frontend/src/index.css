@@ -68,7 +68,7 @@ button:hover{ opacity:0.95; }
   justify-content:space-between;
   align-items:center;
   padding:8px 0;
-  border-bottom:1px dashed #eee;
+  border-bottom:1px dashed white;
 }
 
 .msg{ margin-top:8px; color:var(--muted); }

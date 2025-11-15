@@ -1,45 +1,59 @@
-import React, { useState } from 'react';
-import TravelForm from './components/TravelForm';
-import TravelList from './components/TravelList';
-import AuthPage from './pages/AuthPage';
-import './index.css';
+import React, { useState } from "react";
+import LandingPage from "./pages/LandingPage";
+import AuthPage from "./pages/AuthPage";
+import { TravelWizard } from "./pages/TravelWizard";
+import BudgetHistory from "./pages/BudgetHistory";
+import "./App.css";
+
+type View = "landing" | "login" | "wizard" | "history";
 
 function App() {
-  const [refreshKey, setRefreshKey] = useState(0);
-  const token = localStorage.getItem('token');
-
-  const onCreated = () => {
-    setRefreshKey(k => k + 1);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  };
+  const [view, setView] = useState<View>("landing");
+  const token = localStorage.getItem("token");
 
   const logout = () => {
-    localStorage.removeItem('token');
-    window.location.reload();
+    localStorage.removeItem("token");
+    setView("login");
   };
 
   return (
     <>
-      {!token ? (
-        <AuthPage />
-      ) : (
-        <div className="container">
-          <header>
-            <h1>Travel Planner</h1>
-            <button onClick={logout} className="btn-logout">Cerrar sesión</button>
-          </header>
+      {view === "landing" && <LandingPage onLogin={() => setView("login")} />}
 
-          <TravelForm onCreated={onCreated} />
-          <TravelList key={refreshKey} />
+      {view === "login" && (
+        <AuthPage onLoginSuccess={() => setView("wizard")} />
+      )}
 
-          <footer>
-            <small>Frontend conectado a <code>http://localhost:3000</code></small>
-          </footer>
+      {view === "wizard" && token && (
+        <div className="page">
+
+          {/* 🔵 HERO HEADER */}
+          <section className="hero-header">
+            <h1 className="hero-title">SIMULADOR DE VIAJES</h1>
+          
+          </section>
+
+          {/* 🔵 CONTENEDOR PRINCIPAL */}
+          <div className="wizard-wrapper">
+            
+            {/* Botones de acción arriba */}
+            <div className="wizard-actions">
+              <button onClick={logout} className="btn-small">Cerrar sesión</button>
+              <button onClick={() => setView("history")} className="btn-small">Ver presupuestos</button>
+            </div>
+
+            {/* Wizard principal */}
+            <TravelWizard />
+
+          </div>
         </div>
+      )}
+
+      {view === "history" && token && (
+        <BudgetHistory onBack={() => setView("landing")} />
       )}
     </>
   );
 }
 
 export default App;
-

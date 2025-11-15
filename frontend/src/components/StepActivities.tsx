@@ -25,7 +25,7 @@ export const StepActivities = ({
 }: Props) => {
   return (
     <div>
-      <h2>4. Actividades y detalles</h2>
+      <h2 className="title-step">4. Actividades y detalles</h2>
 
       <div style={{ marginBottom: 12 }}>
         <label>Días:</label>

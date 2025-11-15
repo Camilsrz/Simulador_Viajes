@@ -18,21 +18,21 @@ export const StepProposal = ({ destination, lodging, transport, activities, days
 
   return (
     <div style={{ padding: 12 }}>
-      <h2>5. Resumen y confirmación</h2>
+      <h2 className="title-step">5. Resumen y confirmación</h2>
 
       <div className="card">
         <h4>Destino</h4>
-        <p>{destination.title} — ₲{destination.price.toLocaleString('es-CO')}</p>
+        <p>{destination.title} — ${destination.price.toLocaleString('es-CO')}</p>
       </div>
 
       <div className="card">
         <h4>Alojamiento</h4>
-        <p>{lodging.title} — ₲{lodging.price.toLocaleString('es-CO')} /día</p>
+        <p>{lodging.title} — ${lodging.price.toLocaleString('es-CO')} /día</p>
       </div>
 
       <div className="card">
         <h4>Transporte</h4>
-        <p>{transport.title} — ₲{transport.price.toLocaleString('es-CO')}</p>
+        <p>{transport.title} — ${transport.price.toLocaleString('es-CO')}</p>
       </div>
 
       <div className="card">
@@ -40,8 +40,8 @@ export const StepProposal = ({ destination, lodging, transport, activities, days
         <p>{activities.length > 0 ? activities.map(a => a.title).join(', ') : 'Ninguna'}</p>
       </div>
 
-      <h3>Total por persona: ₲{perPerson.toLocaleString('es-CO')}</h3>
-      <h2>Total (x{travelers}): ₲{total.toLocaleString('es-CO')}</h2>
+      <h3>Total por persona: ${perPerson.toLocaleString('es-CO')}</h3>
+      <h2>Total (x{travelers}): ${total.toLocaleString('es-CO')}</h2>
 
       <div className="wizard-buttons" style={{ marginTop: 12 }}>
         <button className="btn-small" onClick={back}>Atrás</button>
@@ -56,3 +56,4 @@ export const StepProposal = ({ destination, lodging, transport, activities, days
     </div>
   );
 };
+

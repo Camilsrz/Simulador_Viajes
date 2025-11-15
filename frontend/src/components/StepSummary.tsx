@@ -8,7 +8,7 @@ interface StepSummaryProps {
   activities: Option[];
   days: number;
   travelers: number;
-  travelId: number; // id del viaje en DB
+  travelId: number;
   back: () => void;
   onDone: () => void;
 }
@@ -29,7 +29,7 @@ export const StepSummary: React.FC<StepSummaryProps> = ({
     try {
       const response = await fetch(`http://localhost:3000/travels/${travelId}/export?format=pdf`, {
         headers: {
-          Authorization: `Bearer ${localStorage.getItem('token')}`, // si usas auth
+          Authorization: `Bearer ${localStorage.getItem('token')}`,
         },
       });
 
@@ -53,16 +53,26 @@ export const StepSummary: React.FC<StepSummaryProps> = ({
 
   return (
     <div>
-      <h2>Resumen del viaje</h2>
-      <p><strong>Destino:</strong> {destination.title}</p>
-      <p><strong>Alojamiento:</strong> {lodging.title}</p>
-      <p><strong>Transporte:</strong> {transport.title}</p>
+      <h2 className="title-step">Resumen del viaje</h2>
+
+      <p><strong>Destino:</strong> {destination.title} — $ {destination.price.toLocaleString('es-CO')}</p>
+
+      <p><strong>Alojamiento:</strong> {lodging.title} — $ {lodging.price.toLocaleString('es-CO')}</p>
+
+      <p><strong>Transporte:</strong> {transport.title} — $ {transport.price.toLocaleString('es-CO')}</p>
+
       <p><strong>Días:</strong> {days}</p>
+
       <p><strong>Viajeros:</strong> {travelers}</p>
+
       <p><strong>Actividades:</strong></p>
       <ul>
         {activities.length > 0 ? (
-          activities.map((a, i) => <li key={i}>{a.title}</li>)
+          activities.map((a, i) => (
+            <li key={i}>
+              {a.title} — $ {a.price.toLocaleString('es-CO')}
+            </li>
+          ))
         ) : (
           <li>No se registraron actividades</li>
         )}

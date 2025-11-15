@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 
 interface Props {
-  onBack: () => void; // Función que vuelve al paso anterior
+  onBack: () => void;
 }
 
 interface Travel {
@@ -24,7 +24,7 @@ export default function BudgetHistory({ onBack }: Props) {
   useEffect(() => {
     const fetchTravels = async () => {
       try {
-        const token = localStorage.getItem('token'); // token para auth si aplica
+        const token = localStorage.getItem('token');
         const res = await fetch('http://localhost:3000/travels', {
           headers: {
             Authorization: token ? `Bearer ${token}` : '',
@@ -51,17 +51,26 @@ export default function BudgetHistory({ onBack }: Props) {
     <div style={{ padding: 20 }}>
       <h2>Historial de presupuestos</h2>
 
-      {/* Botón Volver */}
-      <button onClick={onBack} style={{ marginBottom: 20 }}>
-        Volver
+      {/* 🔙 Botón VOLVER con estilo */}
+      <button
+        onClick={onBack}
+        style={{
+          backgroundColor: '#ccc',
+          padding: '10px 18px',
+          borderRadius: 6,
+          border: 'none',
+          cursor: 'pointer',
+          marginBottom: 20,
+          fontWeight: 'bold'
+        }}
+      >
+        ← Volver
       </button>
 
-      {/* Estados de carga y error */}
       {loading && <p>Cargando presupuestos...</p>}
       {error && <p style={{ color: 'red' }}>{error}</p>}
       {!loading && travels.length === 0 && <p>No se encontraron presupuestos.</p>}
 
-      {/* Listado de viajes */}
       {travels.map((t) => (
         <div
           key={t.id}
@@ -70,43 +79,31 @@ export default function BudgetHistory({ onBack }: Props) {
             padding: 15,
             marginBottom: 15,
             borderRadius: 8,
+            backgroundColor: '#fafafa'
           }}
         >
-          <p>
-            <strong>Destino:</strong> {t.destination}
-          </p>
-          <p>
-            <strong>Alojamiento:</strong> {t.lodging}
-          </p>
-          <p>
-            <strong>Transporte:</strong> {t.transport}
-          </p>
-          <p>
-            <strong>Días:</strong> {t.days}
-          </p>
-          <p>
-            <strong>Viajeros:</strong> {t.travelers}
-          </p>
+          <p><strong>Destino:</strong> {t.destination}</p>
+          <p><strong>Alojamiento:</strong> {t.lodging}</p>
+          <p><strong>Transporte:</strong> {t.transport}</p>
+          <p><strong>Días:</strong> {t.days}</p>
+          <p><strong>Viajeros:</strong> {t.travelers}</p>
           <p>
             <strong>Actividades:</strong>{' '}
             {t.activities.length > 0 ? t.activities.join(', ') : 'Ninguna'}
           </p>
+
+          {/* 💰 Precios SIN G */}
           <p>
             <strong>Presupuesto por persona:</strong>{' '}
-            {t.budgetperperson.toLocaleString('es-CO', {
-              style: 'currency',
-              currency: 'COP',
-            })}
+            {`$ ${t.budgetperperson.toLocaleString('es-CO')}`}
           </p>
           <p>
             <strong>Presupuesto total:</strong>{' '}
-            {t.totalbudget.toLocaleString('es-CO', {
-              style: 'currency',
-              currency: 'COP',
-            })}
+            {`$ ${t.totalbudget.toLocaleString('es-CO')}`}
           </p>
         </div>
       ))}
     </div>
   );
 }
+

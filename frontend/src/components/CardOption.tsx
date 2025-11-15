@@ -14,7 +14,7 @@ export const CardOption = ({ title, price, image, selected = false, onClick }: P
       <img src={image} alt={title} />
       <div className="overlay">
         <h3>{title}</h3>
-        <p>₲ {price.toLocaleString('es-CO')}</p>
+        <p>$ {price.toLocaleString('es-CO')}</p>
       </div>
     </div>
   );

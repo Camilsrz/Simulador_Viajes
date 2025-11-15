@@ -12,7 +12,7 @@ interface Props {
 export const StepLodging = ({ selected, onSelect, next, back }: Props) => {
   return (
     <div>
-      <h2>2. Selecciona alojamiento</h2>
+      <h2 className="title-step">2. Selecciona alojamiento</h2>
       <div className="grid">
         {LODGINGS.map((l) => (
           <CardOption

@@ -27,33 +27,28 @@ function App() {
       {view === "wizard" && token && (
         <div className="page">
 
-          {/* 🔵 HERO HEADER */}
           <section className="hero-header">
-            <h1 className="hero-title">SIMULADOR DE VIAJES</h1>
-          
+            <h1 className="hero-title"></h1>
           </section>
 
-          {/* 🔵 CONTENEDOR PRINCIPAL */}
           <div className="wizard-wrapper">
             
-            {/* Botones de acción arriba */}
             <div className="wizard-actions">
               <button onClick={logout} className="btn-small">Cerrar sesión</button>
               <button onClick={() => setView("history")} className="btn-small">Ver presupuestos</button>
             </div>
 
-            {/* Wizard principal */}
             <TravelWizard />
-
           </div>
         </div>
       )}
 
       {view === "history" && token && (
-        <BudgetHistory onBack={() => setView("landing")} />
+        <BudgetHistory onBack={() => setView("wizard")} />
       )}
     </>
   );
 }
 
 export default App;
+

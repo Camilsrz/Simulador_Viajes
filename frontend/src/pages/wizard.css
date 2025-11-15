@@ -144,25 +144,3 @@ body, .page {
   box-shadow: 0 0 0 4px rgba(11, 92, 255, 0.5);
 }
 
-/* Botón estándar usado en TODO el wizard */
-.btn {
-  padding: 12px 20px;
-  background: #0b5cff;
-  color: white;
-  border: none;
-  border-radius: 8px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: 0.3s ease;
-}
-
-.btn:hover:not(:disabled) {
-  background: #0847c7;
-  transform: translateY(-2px);
-}
-
-.btn:disabled {
-  background: #a5b8f7;
-  cursor: not-allowed;
-  transform: none;
-}

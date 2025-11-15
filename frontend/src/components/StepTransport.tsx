@@ -14,7 +14,7 @@ type Props = {
 export const StepTransport = ({ selected, onSelect, next, back }: Props) => {
   return (
     <div>
-      <h2>3. Selecciona tu transporte</h2>
+     <h2 className="title-step">3. Selecciona tu transporte</h2>
 
       <div className="grid">
         {TRANSPORTS.map((t: Option) => (

@@ -13,7 +13,7 @@ const app = express();
 app.use(express.json());
 
 app.use(cors({
-  origin: 'https://simulador-viajes-backend.onrender.com', 
+  origin: 'https://simulador-viajes.vercel.app/', 
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
   credentials: true
 }));

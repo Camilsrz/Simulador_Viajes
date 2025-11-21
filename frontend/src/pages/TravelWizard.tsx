@@ -7,19 +7,16 @@ import { StepProposal } from "../components/StepProposal";
 import { StepSummary } from "../components/StepSummary";
 import type { Option } from "../types";
 
+const API_URL = import.meta.env.VITE_API_URL; 
+
 export const TravelWizard = () => {
   const [step, setStep] = useState(1);
-
-  // Datos principales
   const [destination, setDestination] = useState<Option | null>(null);
   const [lodging, setLodging] = useState<Option | null>(null);
   const [transport, setTransport] = useState<Option | null>(null);
-
-  // Datos adicionales
   const [activities, setActivities] = useState<Option[]>([]);
   const [days, setDays] = useState<number>(1);
   const [travelers, setTravelers] = useState<number>(1);
-
   const [savedTravelId, setSavedTravelId] = useState<number | null>(null);
 
   const toggleActivity = (a: Option) => {
@@ -41,11 +38,15 @@ export const TravelWizard = () => {
         activities: activities.map(a => a.title),
         days,
         travelers,
-        budgetPerPerson: 100000,
+        budgetPerPerson: 100000, 
       };
 
       const token = localStorage.getItem('token');
-      const res = await fetch('http://localhost:3000/travels', {
+      if (!token) throw new Error('Usuario no autenticado');
+
+      console.log('Saving travel:', travelData, 'Token:', token);
+
+      const res = await fetch(`${API_URL}/travels`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -54,13 +55,17 @@ export const TravelWizard = () => {
         body: JSON.stringify(travelData),
       });
 
-      if (!res.ok) throw new Error('Error al guardar viaje');
+      if (!res.ok) {
+        const errorData = await res.json();
+        console.error('Error saving travel:', errorData);
+        throw new Error(errorData.error || 'Error al guardar viaje');
+      }
 
       const savedTravel = await res.json();
       return savedTravel.id;
-    } catch (err) {
+    } catch (err: any) {
       console.error(err);
-      alert('No se pudo guardar el viaje');
+      alert(err.message || 'No se pudo guardar el viaje');
       return null;
     }
   };
@@ -68,18 +73,14 @@ export const TravelWizard = () => {
   return (
     <div className="wizard-wrapper">
       {step === 1 && (
-        <StepDestination
-          selected={destination}
-          onSelect={setDestination}
-          next={() => setStep(2)}
-        />
+        <StepDestination selected={destination} onSelect={setDestination} next={() => setStep(2)} />
       )}
 
       {step === 2 && destination && (
         <StepLodging
           selected={lodging}
           onSelect={setLodging}
-          selectedCity={destination.title} 
+          selectedCity={destination.title}
           next={() => setStep(3)}
           back={() => setStep(1)}
         />
@@ -89,7 +90,7 @@ export const TravelWizard = () => {
         <StepTransport
           selected={transport}
           onSelect={setTransport}
-          selectedCity={destination.title}  
+          selectedCity={destination.title}
           next={() => setStep(4)}
           back={() => setStep(2)}
         />

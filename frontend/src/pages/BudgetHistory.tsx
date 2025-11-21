@@ -13,8 +13,8 @@ interface Travel {
   activities: string[];
   days: number;
   travelers: number;
-  budgetperperson: number;
-  totalbudget: number;
+  budgetPerPerson: number;
+  totalBudget: number;
 }
 
 export default function BudgetHistory({ onBack }: Props) {
@@ -39,7 +39,7 @@ export default function BudgetHistory({ onBack }: Props) {
   }, []);
 
   return (
-    <div style={{ padding: 20, marginTop: "90px" }}>
+    <div style={{ padding: 20, marginTop: '90px' }}>
       <h2>Historial de presupuestos</h2>
 
       <button
@@ -51,7 +51,7 @@ export default function BudgetHistory({ onBack }: Props) {
           border: 'none',
           cursor: 'pointer',
           marginBottom: 20,
-          fontWeight: 'bold'
+          fontWeight: 'bold',
         }}
       >
         ← Volver
@@ -59,7 +59,6 @@ export default function BudgetHistory({ onBack }: Props) {
 
       {loading && <p>Cargando presupuestos...</p>}
       {error && <p style={{ color: 'red' }}>{error}</p>}
-
       {!loading && !error && travels.length === 0 && (
         <p>No se encontraron presupuestos.</p>
       )}
@@ -72,26 +71,35 @@ export default function BudgetHistory({ onBack }: Props) {
             padding: 15,
             marginBottom: 15,
             borderRadius: 8,
-            backgroundColor: '#fafafa'
+            backgroundColor: '#fafafa',
           }}
         >
-          <p><strong>Destino:</strong> {t.destination}</p>
-          <p><strong>Alojamiento:</strong> {t.lodging}</p>
-          <p><strong>Transporte:</strong> {t.transport}</p>
-          <p><strong>Días:</strong> {t.days}</p>
-          <p><strong>Viajeros:</strong> {t.travelers}</p>
+          <p>
+            <strong>Destino:</strong> {t.destination}
+          </p>
+          <p>
+            <strong>Alojamiento:</strong> {t.lodging}
+          </p>
+          <p>
+            <strong>Transporte:</strong> {t.transport}
+          </p>
+          <p>
+            <strong>Días:</strong> {t.days}
+          </p>
+          <p>
+            <strong>Viajeros:</strong> {t.travelers}
+          </p>
           <p>
             <strong>Actividades:</strong>{' '}
             {t.activities.length > 0 ? t.activities.join(', ') : 'Ninguna'}
           </p>
-
           <p>
             <strong>Presupuesto por persona:</strong>{' '}
-            {`$ ${t.budgetperperson.toLocaleString('es-CO')}`}
+            {`$ ${t.budgetPerPerson.toLocaleString('es-CO')}`}
           </p>
           <p>
             <strong>Presupuesto total:</strong>{' '}
-            {`$ ${t.totalbudget.toLocaleString('es-CO')}`}
+            {`$ ${t.totalBudget.toLocaleString('es-CO')}`}
           </p>
         </div>
       ))}

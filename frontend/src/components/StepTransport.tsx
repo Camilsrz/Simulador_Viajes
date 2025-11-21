@@ -2,22 +2,28 @@ import React from "react";
 import type { Option } from "../types";
 import { TRANSPORTS } from "../data/options";
 import { CardOption } from "./CardOption";
+import { CoverflowCarousel } from "../components/CoverflowCarousel";
+import { isEnabledForCity } from "../utils/isEnableForCity";
 import "../pages/wizard.css";
 
 type Props = {
   selected: Option | null;
   onSelect: (o: Option) => void;
+  selectedCity: string;
   next: () => void;
   back: () => void;
 };
 
-export const StepTransport = ({ selected, onSelect, next, back }: Props) => {
-  return (
-    <div>
-     <h2 className="title-step">3. Selecciona tu transporte</h2>
+export const StepTransport = ({ selected, onSelect, selectedCity, next, back }: Props) => {
+//Filtro de actividades disponibles para la ciudad seleccionada
+  const availableTransports = TRANSPORTS.filter(t => isEnabledForCity(t, selectedCity));
 
-      <div className="grid">
-        {TRANSPORTS.map((t: Option) => (
+  return (
+    <div className="wizard-container">
+      <h2 className="title-step">3. SELECCIONA TU TRANSPORTE</h2>
+
+      <CoverflowCarousel
+        items={availableTransports.map(t => (
           <CardOption
             key={t.title}
             title={t.title}
@@ -27,10 +33,10 @@ export const StepTransport = ({ selected, onSelect, next, back }: Props) => {
             onClick={() => onSelect(t)}
           />
         ))}
-      </div>
+      />
 
-      <div className="wizard-buttons" style={{ marginTop: 16 }}>
-        <button className="btn-small" onClick={back}>
+      <div className="wizard-buttons" style={{ marginTop: "20px" }}>
+        <button className="btn-return" onClick={back}>
           Atrás
         </button>
 

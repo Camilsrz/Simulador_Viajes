@@ -11,11 +11,13 @@ body {
 
 .auth-container {
   display: flex;
-  height: 700px;
-  width: 1000px;
+  max-width: 1000px;
+  width: 100%;
+  height: auto;
+  min-height: 600px;
   box-shadow: 0 0 20px rgba(0, 0, 0, 0.4);
-  margin: auto;
-  margin-top: 100px;
+  margin: 100px auto;
+  background-color: #fff;
 }
 
 .info {
@@ -70,7 +72,7 @@ body {
 
 .form p {
   font-size: 16px;
-  color: #c4c3c3;
+  color: #8b8b8b;
   margin-bottom: 25px;
 }
 
@@ -117,10 +119,11 @@ body {
 }
 
 @media(max-width: 990px) {
-  .container {
-    width: 350px;
-    height: 600px;
-    margin-top: 100px;
+  .auth-container {
+    flex-direction: column;
+    width: 90%;
+    height: auto;
+    margin-top: 40px;
   }
 
   .info {
@@ -129,10 +132,6 @@ body {
 
   .form {
     width: 100%;
-    padding: 30px;
-  }
-
-  .form h2 {
-    margin-top: 40px;
+    padding: 40px 30px;
   }
 }

@@ -1,20 +1,33 @@
-import type { Option } from '../types';
-
 interface Props {
   title: string;
   price: number;
   image: string;
+  isActive?: boolean;
   selected?: boolean;
-  onClick: () => void;
+  disabled?: boolean;
+  onClick?: () => void;
 }
 
-export const CardOption = ({ title, price, image, selected = false, onClick }: Props) => {
+export const CardOption = ({
+  title,
+  price,
+  image,
+  isActive = false,
+  selected = false,
+  disabled = false,
+  onClick,
+}: Props) => {
   return (
-    <div className={`card-option ${selected ? 'selected' : ''}`} onClick={onClick} role="button" tabIndex={0}>
+    <div
+      className={`card-option ${selected ? "selected" : ""} ${
+        isActive ? "active" : "inactive"
+      } ${disabled ? "opacity-40 cursor-not-allowed" : "cursor-pointer"}`}
+      onClick={!disabled ? onClick : undefined}
+    >
       <img src={image} alt={title} />
-      <div className="overlay">
-        <h3>{title}</h3>
-        <p>$ {price.toLocaleString('es-CO')}</p>
+      <div className="center-overlay">
+        <h2 className="place-title">{title}</h2>
+        <h3 className="place-price">$ {price.toLocaleString("es-CO")}</h3>
       </div>
     </div>
   );

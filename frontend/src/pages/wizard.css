@@ -1,146 +1,348 @@
-/* ----------------------------- */
-/* 🌄 HERO HEADER */
-/* ----------------------------- */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: "Poppins", sans-serif;
+}
+
+:root {
+  --bg: #f7f7fb;
+  --card: #ffffff;
+  --accent: #0b5cff;
+  --muted: #666;
+}
+
+/* BACKGROUND */
+body {
+  background: url("/img/avion.png") center/cover no-repeat fixed;
+  color: #333;
+}
+
+.page {
+  margin-top: 72px; 
+}
+
+.wizard-container { 
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
 
 .hero-header {
-  width: 100%;
-  height: 100vh; /* La imagen ocupa toda la altura de la pantalla */
-  background: url("https://espiral21.com/wp-content/uploads/2020/09/mmuerto-2.jpeg")
-    center/cover no-repeat;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  color: white;
-  text-shadow: 0 4px 8px rgba(0, 0, 0, 0.6); /* Sombra más suave para el texto */
-  padding: 20px;
-  background-size: cover;
   position: relative;
-  overflow: hidden; /* Asegura que no se desborde la imagen */
 }
 
-/* ----------------------------- */
-/* 🟦 CONTENIDO PRINCIPAL */
-/* ----------------------------- */
-
-body, .page {
-  background: #f5f7fb; /* Fondo más suave y neutro */
-  font-family: 'Poppins', sans-serif;
-  color: #333; /* Texto más suave para mejorar la lectura */
+.hero-header::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0.2),
+    rgba(0, 0, 0, 0.7)
+  );
+  z-index: 1;
 }
 
-.wizard-wrapper {
-  max-width: 1100px;
-  margin: 0 auto; /* Centrado horizontal */
-  padding: 40px 50px;
-  background: white;
-  border-radius: 20px; /* Bordes redondeados */
-  box-shadow: 0 8px 40px rgba(0, 0, 0, 0.1); /* Sombra */
-  position: absolute; /* Posicionamiento absoluto sobre la imagen */
-  top: 50%; /* Centrado vertical */
-  left: 50%;
-  transform: translate(-50%, -50%); /* Centrado exacto */
-  z-index: 2; /* Asegura que el contenido esté encima de la imagen */
-  display: flex;
-  flex-direction: column;
-  justify-content: center; /* Centrado verticalmente */
-  align-items: center; /* Centrado horizontalmente */
-}
-
-/* ----------------------------- */
-/* 🟩 SELECCIONAR DESTINO (SIMILAR A ALOJAMIENTO) */
-/* ----------------------------- */
-
-.title-step {
-  text-align: center;
-  font-size: 32px; /* Título más grande */
-  margin-bottom: 35px;
+.hero-title {
+  font-size: 56px;
   font-weight: 700;
-  color: #0b5cff;
+  text-align: center;
+  letter-spacing: 2px;
+  z-index: 2;
 }
 
-/* Estilo para las tarjetas dentro de "Selecciona tu destino" */
+.hero-sub {
+  margin-top: 12px;
+  font-size: 20px;
+  opacity: 0.85;
+  font-family: "Roboto", sans-serif;
+  z-index: 2;
+}
+
+
 .grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 28px;
-  margin-bottom: 40px; /* Más espacio entre las tarjetas y el siguiente contenido */
+  width: 100%;
+  margin-bottom: 40px;
 }
 
+/* TARJETAS */
 .card-option {
   position: relative;
-  height: 240px;
-  border-radius: 16px;
-  overflow: hidden;
-  cursor: pointer;
-  border: 3px solid transparent;
-  background: white;
-  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12); /* Sombra más suave */
-  transition: 0.3s ease-in-out;
+  width: 300px;
+  height: 480px;
+  border-radius: 20px;
+  overflow: visible;
+  transition: transform 0.3s ease;
 }
 
 .card-option img {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  transition: transform 0.3s ease-in-out; /* Animación en imagen */
+  filter: brightness(60%);
+  transition: transform 0.3s ease;
 }
 
 .card-option:hover {
-  transform: translateY(-6px); /* Sutil animación al pasar el mouse */
+  transform: translateY(-6px);
   box-shadow: 0 12px 36px rgba(0, 0, 0, 0.18);
-  border-color: #0b5cff;
+}
+
+.card-option:hover img {
+  transform: scale(1.08);
 }
 
 .card-option.selected {
-  border-color: #0b5cff;
-  box-shadow: 0 0 0 6px rgba(40, 167, 69, 0.25);
+  outline: 5px solid #1188e9;
+  z-index: 50;
+  transform: translateY(-3px);
+  box-shadow: 0 10px 30px rgba(11, 92, 255, 0.3);
+  border-radius: 0 !important;
 }
 
-.overlay {
+
+.center-overlay {
   position: absolute;
-  bottom: 0;
-  width: 100%;
-  padding: 20px;
-  background: linear-gradient(180deg, rgba(0, 0, 0, 0.0) 10%, rgba(0, 0, 0, 0.7) 80%);
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
   color: white;
+  text-shadow: 0 4px 20px rgba(0,0,0,0.8);
+  z-index: 10;
+  transition: opacity 0.35s ease, transform 0.35s ease;
+}
+
+.place-title {
+  font-size: 90px;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.place-price {
+  margin-top: 10px;
+  font-size: 30px;
+  font-weight: 300;
+}
+
+.card-option.inactive .center-overlay {
+  opacity: 0;
+  transform: translate(-50%, -40%);
+}
+
+.card-option.active .center-overlay {
+  opacity: 1;
+  transform: translate(-50%, -50%);
+}
+
+
+.details-box {
+  display: flex;
+  justify-content: center;
+  gap: 40px;
+  margin: 10px 0 30px;
+}
+
+.detail-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: #132C47;
+  padding: 16px;
+  border-radius: 12px;
+  width: 150px;
+  color: white;
+}
+
+.detail-item input {
+  width: 80px;
+  padding: 6px;
+  border: 2px solid #ddd;
+  border-radius: 8px;
+  text-align: center;
+  font-size: 16px;
+}
+
+.detail-item input:focus {
+  border-color: #097EF6;
+  box-shadow: 0 0 6px rgba(9,126,246,0.4);
+}
+
+
+.title-step {
+  margin-top: 250px;
+  text-align: center;
+  font-size: 45px;
+  margin-bottom: 35px;
   font-weight: 700;
-  font-size: 18px;
-  text-shadow: 0 2px 6px rgba(0, 0, 0, 0.5);
+  color: #132C47;
 }
 
-.overlay h2 {
-  margin: 0;
+.subtitle-step {
+  text-align: center;
+  font-size: 20px;
+  margin: 8px 0 20px;
+  color: #555;
 }
 
-/* Botón siguiente */
+/*  BOTONES */
+.wizard-actions,
 .wizard-buttons {
   display: flex;
   justify-content: flex-end;
-  margin-top: 32px;
+  gap: 18px;
+  margin-bottom: 40px;
 }
 
-.wizard-buttons .btn-small {
-  margin-left: 10px;
-  font-size: 18px; /* Mayor tamaño de fuente */
+.btn-small,
+.btn-return,
+.btn-export {
   padding: 12px 20px;
-  border-radius: 8px;
-  background: #0b5cff;
-  color: white;
+  border-radius: 10px;
   border: none;
   cursor: pointer;
   font-weight: 600;
-  transition: 0.3s ease-in-out;
+  transition: 0.25s ease-in-out;
 }
 
-.wizard-buttons .btn-small:hover {
-  background: #0847c7;
+.btn-small {
+  background: #a3aab1;
+  color: white;
+}
+.btn-small:hover {
+  background: #132c47;
   transform: translateY(-4px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
-.wizard-buttons .btn-small:focus {
-  outline: none;
-  box-shadow: 0 0 0 4px rgba(11, 92, 255, 0.5);
+.btn-return {
+  background: #e5e7eb;
+  color: #111827;
+}
+.btn-return:hover {
+  background: #d1d5db;
+  transform: translateY(-3px);
 }
 
+.btn-export {
+  background: #a5abb1;
+  color: white;
+}
+.btn-export:hover {
+  background: #132c47;
+  transform: translateY(-3px);
+}
+
+/*  TARJETA DE RESUMEN */
+.summary-card {
+  color: rgb(3, 3, 3) !important;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.summary-wrapper {
+  background: white;
+  padding: 28px;
+  border-radius: 16px;
+  box-shadow: 0px 4px 15px rgba(0,0,0,0.12);
+  max-width: 600px;
+  margin: 20px auto;
+  color: #1a1a1a;
+}
+
+.summary-wrapper .summary-card {
+  background: none !important;
+  border: none !important;
+  padding: 12px 0;
+  margin-bottom: 10px;
+}
+
+.summary-wrapper .total-box h3,
+.summary-wrapper .total-box h2 {
+  margin: 4px 0;
+  color: #132c47;
+}
+
+.hero-full {
+  width: 100vw;
+  height: 100vh;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  background: url("https://images.unsplash.com/photo-1614547880608-8ea64aa6b945?ixlib=rb-4.1.0&q=60&w=3000")
+              center/cover no-repeat;
+}
+
+.hero-full::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.35);
+}
+
+.hero-content {
+  z-index: 2;
+  color: white;
+  max-width: 700px;
+}
+
+.hero-buttons button {
+  padding: 12px 28px;
+  font-size: 16px;
+  font-weight: 600;
+  border-radius: 10px;
+  background-color: #132c47;
+}
+.hero-buttons button:hover {
+  background-color: #1c4169;
+}
+
+@media (max-width: 768px) {
+
+  .hero-title {
+    font-size: 34px;
+  }
+
+  .hero-sub {
+    font-size: 16px;
+  }
+
+  .grid {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+
+  .card-option {
+    height: 340px;
+  }
+
+  .place-title {
+    font-size: 48px;
+  }
+
+  .place-price {
+    font-size: 24px;
+  }
+
+  .details-box {
+    flex-direction: column;
+    gap: 15px;
+    align-items: center;
+  }
+
+  .detail-item {
+    width: 180px;
+  }
+
+  .title-step {
+    font-size: 32px;
+    margin-top: 180px;
+  }
+}

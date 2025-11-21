@@ -1,6 +1,8 @@
-import { ACTIVITIES } from '../data/options';
-import { CardOption } from './CardOption';
-import type { Option } from '../types';
+import { ACTIVITIES } from "../data/options";
+import { CardOption } from "./CardOption";
+import type { Option } from "../types";
+import { CoverflowCarousel } from "../components/CoverflowCarousel";
+import { isEnabledForCity } from "../utils/isEnableForCity";
 
 interface Props {
   selectedActivities: Option[];
@@ -9,6 +11,7 @@ interface Props {
   setDays: (v: number) => void;
   travelers: number;
   setTravelers: (v: number) => void;
+  selectedCity: string;   
   next?: () => void;
   back?: () => void;
 }
@@ -20,42 +23,67 @@ export const StepActivities = ({
   setDays,
   travelers,
   setTravelers,
+  selectedCity,
   next,
-  back
+  back,
 }: Props) => {
-  return (
-    <div>
-      <h2 className="title-step">4. Actividades y detalles</h2>
+  // Filtro de actividades disponibles para la ciudad seleccionada
+  const availableActivities = ACTIVITIES.filter(a => isEnabledForCity(a, selectedCity));
 
-      <div style={{ marginBottom: 12 }}>
-        <label>Días:</label>
-        <input type="number" min={1} value={days} onChange={(e) => setDays(Number(e.target.value))} />
-        <label style={{ marginLeft: 12 }}>Viajeros:</label>
-        <input type="number" min={1} value={travelers} onChange={(e) => setTravelers(Number(e.target.value))} />
+  return (
+    <div className="wizard-container">
+      <h2 className="title-step">4. ACTIVIDADES Y DETALLES</h2>
+
+      <div className="details-box">
+        <div className="detail-item">
+          <label>Días</label>
+          <input
+            type="number"
+            min={1}
+            value={days}
+            onChange={(e) => setDays(Number(e.target.value))}
+          />
+        </div>
+
+        <div className="detail-item">
+          <label>Viajeros</label>
+          <input
+            type="number"
+            min={1}
+            value={travelers}
+            onChange={(e) => setTravelers(Number(e.target.value))}
+          />
+        </div>
       </div>
 
-      <div className="grid">
-        {ACTIVITIES.map((a) => {
-          const selected = selectedActivities.some(sa => sa.title === a.title);
+      <CoverflowCarousel
+        items={availableActivities.map((a: Option) => {
+          const isSelected = selectedActivities.some(
+            (sa) => sa.title === a.title
+          );
+
           return (
             <CardOption
               key={a.title}
               title={a.title}
               price={a.price}
               image={a.image}
-              selected={selected}
+              selected={isSelected}
               onClick={() => toggleActivity(a)}
             />
           );
         })}
-      </div>
+      />
 
-      <div className="wizard-buttons">
-        <button className="btn-small" onClick={back}>Atrás</button>
-        <button 
-          className="btn-small" 
-          onClick={next} 
-          disabled={selectedActivities.length === 0} 
+      <div className="wizard-buttons" style={{ marginTop: "20px" }}>
+        <button className="btn-return" onClick={back}>
+          Atrás
+        </button>
+
+        <button
+          className="btn-small"
+          onClick={next}
+          disabled={selectedActivities.length === 0}
           style={{ marginLeft: 8 }}
         >
           Siguiente

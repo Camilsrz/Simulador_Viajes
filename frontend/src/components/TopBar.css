@@ -1,0 +1,69 @@
+.topbar-global {
+  width: 100%;
+  padding: 16px 32px;
+  background: #132C47; 
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap; 
+  gap: 10px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 9999;
+}
+
+.topbar-left {
+  font-size: 28px;
+  font-weight: 700;
+  color: white;
+  white-space: nowrap; 
+}
+
+.topbar-right {
+  display: flex;
+  flex-wrap: wrap;   
+  gap: 10px;
+  justify-content: center;
+}
+
+.topbar-right button {
+  padding: 8px 16px;
+  font-size: 16px;
+  font-weight: 600;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  background: transparent;
+  color: white;
+}
+
+.topbar-right button:hover {
+  color: #adb3bb;
+}
+
+/* RESPONSIVE*/
+@media (max-width: 768px) {
+  .topbar-global {
+    padding: 6px 20px;
+    justify-content: center; 
+    text-align: center;
+  }
+
+  .topbar-left {
+    width: 100%;
+    font-size: 18px;
+    text-align: center;
+  }
+
+  .topbar-right {
+    width: 100%;
+    justify-content: left;
+  }
+
+  .topbar-right button {
+    font-size: 8px;
+    padding: 8px 12px;
+  }
+}

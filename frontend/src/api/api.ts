@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-// Usamos la variable de entorno o fallback a localhost
+// Variable de entorno localhost
 const API_URL = (import.meta.env.VITE_API_URL as string) || 'http://localhost:3000';
 
 export const api = axios.create({

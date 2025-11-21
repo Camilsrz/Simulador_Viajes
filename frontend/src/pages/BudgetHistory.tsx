@@ -48,10 +48,9 @@ export default function BudgetHistory({ onBack }: Props) {
   }, []);
 
   return (
-    <div style={{ padding: 20 }}>
+    <div style={{ padding: 20, marginTop: "90px" }}>
       <h2>Historial de presupuestos</h2>
 
-      {/* 🔙 Botón VOLVER con estilo */}
       <button
         onClick={onBack}
         style={{
@@ -69,7 +68,10 @@ export default function BudgetHistory({ onBack }: Props) {
 
       {loading && <p>Cargando presupuestos...</p>}
       {error && <p style={{ color: 'red' }}>{error}</p>}
-      {!loading && travels.length === 0 && <p>No se encontraron presupuestos.</p>}
+
+      {!loading && !error && travels.length === 0 && (
+        <p>No se encontraron presupuestos.</p>
+      )}
 
       {travels.map((t) => (
         <div
@@ -92,7 +94,6 @@ export default function BudgetHistory({ onBack }: Props) {
             {t.activities.length > 0 ? t.activities.join(', ') : 'Ninguna'}
           </p>
 
-          {/* 💰 Precios SIN G */}
           <p>
             <strong>Presupuesto por persona:</strong>{' '}
             {`$ ${t.budgetperperson.toLocaleString('es-CO')}`}
@@ -106,4 +107,3 @@ export default function BudgetHistory({ onBack }: Props) {
     </div>
   );
 }
-

@@ -1,16 +1,23 @@
 .landing-container header {
+  width: 100%;
   background: white;
   padding: 16px 32px;
   text-align: center;
   font-size: 28px;
   font-weight: 700;
-  color: #0b5cff;
+  color: #132c47;
   box-shadow: 0 4px 16px rgba(0,0,0,0.05);
+  border: none !important;      
 }
 
+
 .hero {
+  width: 100%;
   height: 90vh;
-  background: url('https://images.unsplash.com/photo-1614547880608-8ea64aa6b945?ixlib=rb-4.1.0&q=60&w=3000') center/cover no-repeat;
+  margin: 0;                       
+  padding: 0;                    
+  background: url('https://images.unsplash.com/photo-1614547880608-8ea64aa6b945?ixlib=rb-4.1.0&q=60&w=3000')
+              center/cover no-repeat;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -18,6 +25,8 @@
   position: relative;
 }
 
+
+/* Capa oscura encima de la imagen */
 .hero::after {
   content: "";
   position: absolute;
@@ -30,6 +39,7 @@
   z-index: 2;
   color: white;
   max-width: 700px;
+  padding: 0 16px;               
 }
 
 .hero-content h1 {
@@ -42,6 +52,7 @@
   margin-bottom: 32px;
 }
 
+
 .hero-buttons button {
   padding: 12px 28px;
   font-size: 16px;
@@ -50,11 +61,10 @@
   border: none;
   cursor: pointer;
   color: white;
-  background-color: #0b5cff;
+  background-color: #132c47;
   transition: background-color 0.25s ease;
 }
 
 .hero-buttons button:hover {
-  background-color: #0847c7;
+  background-color: #245588;
 }
-

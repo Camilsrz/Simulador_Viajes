@@ -1,8 +1,8 @@
-// types/travel.ts
 export interface Option {
   title: string;
   price: number;
   image: string;
+  availableCities?: string[];
 }
 
 export interface TravelPayload {
@@ -21,12 +21,12 @@ export interface Travel {
   destination: string;
   days: number;
   travelers: number;
-  transport: string;        
-  lodging: string;          
-  activities: string[];    
-  budgetPerPerson: number;  
-  totalBudget: number;      
-  createdAt: string;  
+  transport: string;
+  lodging: string;
+  activities: string[];
+  budgetPerPerson: number;
+  totalBudget: number;
+  createdAt: string;
 }
 
 // types/user.ts

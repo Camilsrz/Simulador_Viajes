@@ -1,5 +1,5 @@
-import React from 'react';
-import type { Option } from '../types';
+import React from "react";
+import type { Option } from "../types";
 
 interface StepSummaryProps {
   destination: Option;
@@ -24,63 +24,88 @@ export const StepSummary: React.FC<StepSummaryProps> = ({
   back,
   onDone,
 }) => {
-
   const downloadPDF = async () => {
     try {
-      const response = await fetch(`http://localhost:3000/travels/${travelId}/export?format=pdf`, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem('token')}`,
-        },
-      });
+      const response = await fetch(
+        `http://localhost:3000/travels/${travelId}/export?format=pdf`,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      );
 
-      if (!response.ok) throw new Error('Error al generar PDF');
+      if (!response.ok) throw new Error("Error al generar PDF");
 
       const blob = await response.blob();
       const url = window.URL.createObjectURL(blob);
-      const a = document.createElement('a');
+      const a = document.createElement("a");
       a.href = url;
-      a.download = `viaje-${travelId}.pdf`;
+      a.download = `viaje.pdf`;
       document.body.appendChild(a);
       a.click();
       a.remove();
       window.URL.revokeObjectURL(url);
-
     } catch (err) {
       console.error(err);
-      alert('Error al descargar el PDF');
+      alert("Error al descargar el PDF");
     }
   };
 
   return (
-    <div>
-      <h2 className="title-step">Resumen del viaje</h2>
+    <div className="wizard-container">
+      <h2 className="title-step">RESUMEN DEL VIAJE</h2>
 
-      <p><strong>Destino:</strong> {destination.title} — $ {destination.price.toLocaleString('es-CO')}</p>
+      <div
+        style={{
+          background: "white",
+          padding: "24px",
+          borderRadius: "16px",
+          boxShadow: "0px 4px 15px rgba(0,0,0,0.12)",
+          maxWidth: "600px",
+          margin: "20px auto",
+          color: "#1a1a1a",
+        }}
+      >
+        <p><strong>Destino:</strong> {destination.title} — ${" "}
+          {destination.price.toLocaleString("es-CO")}
+        </p>
 
-      <p><strong>Alojamiento:</strong> {lodging.title} — $ {lodging.price.toLocaleString('es-CO')}</p>
+        <p><strong>Alojamiento:</strong> {lodging.title} — ${" "}
+          {lodging.price.toLocaleString("es-CO")}
+        </p>
 
-      <p><strong>Transporte:</strong> {transport.title} — $ {transport.price.toLocaleString('es-CO')}</p>
+        <p><strong>Transporte:</strong> {transport.title} — ${" "}
+          {transport.price.toLocaleString("es-CO")}
+        </p>
 
-      <p><strong>Días:</strong> {days}</p>
+        <p><strong>Días:</strong> {days}</p>
 
-      <p><strong>Viajeros:</strong> {travelers}</p>
+        <p><strong>Viajeros:</strong> {travelers}</p>
 
-      <p><strong>Actividades:</strong></p>
-      <ul>
-        {activities.length > 0 ? (
-          activities.map((a, i) => (
-            <li key={i}>
-              {a.title} — $ {a.price.toLocaleString('es-CO')}
-            </li>
-          ))
-        ) : (
-          <li>No se registraron actividades</li>
-        )}
-      </ul>
+        <p><strong>Actividades:</strong></p>
 
-      <div style={{ marginTop: 20 }}>
-        <button onClick={back} style={{ marginRight: 10 }}>Volver</button>
-        <button onClick={downloadPDF}>Crear presupuesto (PDF)</button>
+        <ul style={{ marginLeft: "16px" }}>
+          {activities.length > 0 ? (
+            activities.map((a, i) => (
+              <li key={i}>
+                {a.title} — ${a.price.toLocaleString("es-CO")}
+              </li>
+            ))
+          ) : (
+            <li>No se registraron actividades</li>
+          )}
+        </ul>
+      </div>
+
+      <div className="wizard-buttons">
+        <button className="btn-return" onClick={back}>
+          Volver
+        </button>
+
+        <button className="btn-small" onClick={downloadPDF}>
+          Crear presupuesto (PDF)
+        </button>
       </div>
     </div>
   );

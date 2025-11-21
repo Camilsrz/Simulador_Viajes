@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import TopBar from "./components/TopBar";
 import LandingPage from "./pages/LandingPage";
 import AuthPage from "./pages/AuthPage";
 import { TravelWizard } from "./pages/TravelWizard";
@@ -25,26 +26,38 @@ function App() {
       )}
 
       {view === "wizard" && token && (
-        <div className="page">
+        <>
+          
+          <TopBar 
+            onLogout={logout} 
+            onHome={() => setView("landing")} 
+            onCreateBudget={() => setView("wizard")}
+            onViewHistory={() => setView("history")} 
+          />
 
-          <section className="hero-header">
-            <h1 className="hero-title"></h1>
-          </section>
+          {/* Contenido principal */}
+          <div className="page">
+            <section className="hero-header">
+              <h1 className="hero-title"></h1>
+            </section>
 
-          <div className="wizard-wrapper">
-            
-            <div className="wizard-actions">
-              <button onClick={logout} className="btn-small">Cerrar sesión</button>
-              <button onClick={() => setView("history")} className="btn-small">Ver presupuestos</button>
+            <div className="wizard-wrapper">
+              <TravelWizard />
             </div>
-
-            <TravelWizard />
           </div>
-        </div>
+        </>
       )}
 
       {view === "history" && token && (
-        <BudgetHistory onBack={() => setView("wizard")} />
+        <>
+          <TopBar 
+            onLogout={logout} 
+            onHome={() => setView("landing")} 
+            onCreateBudget={() => setView("wizard")}
+            onViewHistory={() => setView("history")}
+          />
+          <BudgetHistory onBack={() => setView("wizard")} />
+        </>
       )}
     </>
   );

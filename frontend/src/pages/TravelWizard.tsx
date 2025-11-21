@@ -6,7 +6,6 @@ import { StepActivities } from "../components/StepActivities";
 import { StepProposal } from "../components/StepProposal";
 import { StepSummary } from "../components/StepSummary";
 import type { Option } from "../types";
-import './wizard.css';
 
 export const TravelWizard = () => {
   const [step, setStep] = useState(1);
@@ -31,7 +30,6 @@ export const TravelWizard = () => {
     );
   };
 
-  // Función para guardar el viaje en la base de datos
   const saveTravel = async (): Promise<number | null> => {
     if (!destination || !lodging || !transport) return null;
 
@@ -43,10 +41,10 @@ export const TravelWizard = () => {
         activities: activities.map(a => a.title),
         days,
         travelers,
-        budgetPerPerson: 100000, // o el valor que uses
+        budgetPerPerson: 100000,
       };
 
-      const token = localStorage.getItem('token'); // si usas auth
+      const token = localStorage.getItem('token');
       const res = await fetch('http://localhost:3000/travels', {
         method: 'POST',
         headers: {
@@ -60,7 +58,6 @@ export const TravelWizard = () => {
 
       const savedTravel = await res.json();
       return savedTravel.id;
-
     } catch (err) {
       console.error(err);
       alert('No se pudo guardar el viaje');
@@ -69,8 +66,7 @@ export const TravelWizard = () => {
   };
 
   return (
-    <div style={{ padding: 40 }}>
-      {/* 1. DESTINO */}
+    <div className="wizard-wrapper">
       {step === 1 && (
         <StepDestination
           selected={destination}
@@ -79,28 +75,27 @@ export const TravelWizard = () => {
         />
       )}
 
-      {/* 2. ALOJAMIENTO */}
-      {step === 2 && (
+      {step === 2 && destination && (
         <StepLodging
           selected={lodging}
           onSelect={setLodging}
+          selectedCity={destination.title} 
           next={() => setStep(3)}
           back={() => setStep(1)}
         />
       )}
 
-      {/* 3. TRANSPORTE */}
-      {step === 3 && (
+      {step === 3 && destination && (
         <StepTransport
           selected={transport}
           onSelect={setTransport}
+          selectedCity={destination.title}  
           next={() => setStep(4)}
           back={() => setStep(2)}
         />
       )}
 
-      {/* 4. ACTIVIDADES + DÍAS + VIAJEROS */}
-      {step === 4 && (
+      {step === 4 && destination && (
         <StepActivities
           selectedActivities={activities}
           toggleActivity={toggleActivity}
@@ -108,12 +103,12 @@ export const TravelWizard = () => {
           setDays={setDays}
           travelers={travelers}
           setTravelers={setTravelers}
+          selectedCity={destination.title}
           next={() => setStep(5)}
           back={() => setStep(3)}
         />
       )}
 
-      {/* 5. PROPUESTA */}
       {step === 5 &&
         destination &&
         lodging &&
@@ -136,7 +131,6 @@ export const TravelWizard = () => {
           />
         )}
 
-      {/* 6. RESUMEN — CREAR Y DESCARGAR */}
       {step === 6 &&
         destination &&
         lodging &&

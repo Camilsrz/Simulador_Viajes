@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+
 import { StepDestination } from "../components/StepDestination";
 import { StepLodging } from "../components/StepLodging";
 import { StepTransport } from "../components/StepTransport";
@@ -145,7 +145,6 @@ export const TravelWizard = () => {
             travelers={travelers}
             travelId={savedTravelId}
             back={() => setStep(5)}
-            onDone={() => alert('Viaje finalizado!')}
           />
         )}
     </div>

@@ -10,7 +10,6 @@ interface StepSummaryProps {
   travelers: number;
   travelId: number;
   back: () => void;
-  onDone: () => void;
 }
 
 export const StepSummary: React.FC<StepSummaryProps> = ({
@@ -22,7 +21,6 @@ export const StepSummary: React.FC<StepSummaryProps> = ({
   travelers,
   travelId,
   back,
-  onDone,
 }) => {
   const downloadPDF = async () => {
     try {

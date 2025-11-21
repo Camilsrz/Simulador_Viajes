@@ -1,7 +1,6 @@
 import PDFDocument from 'pdfkit';
-import express from 'express';
-import { Request, Response, NextFunction } from 'express';
-import {travel} from './models/travel';
+import express, { Request, Response, NextFunction } from 'express';
+import { travel } from './models/travel';
 import { createTraveldto } from './dtos/createTravel.dto';
 import { pool } from './db';
 import { hashPassword, comparePassword, signToken } from './auth';

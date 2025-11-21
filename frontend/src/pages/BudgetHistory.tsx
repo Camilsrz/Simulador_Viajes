@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { api } from '../api/api';
 
 interface Props {
   onBack: () => void;
@@ -24,21 +25,11 @@ export default function BudgetHistory({ onBack }: Props) {
   useEffect(() => {
     const fetchTravels = async () => {
       try {
-        const token = localStorage.getItem('token');
-        const res = await fetch('http://localhost:3000/travels', {
-          headers: {
-            Authorization: token ? `Bearer ${token}` : '',
-            'Content-Type': 'application/json',
-          },
-        });
-
-        if (!res.ok) throw new Error('Error al obtener los viajes');
-
-        const data: Travel[] = await res.json();
-        setTravels(data);
+        const res = await api.get<Travel[]>('/travels');
+        setTravels(res.data);
       } catch (err: any) {
         console.error(err);
-        setError(err.message || 'Error inesperado');
+        setError(err.response?.data?.error || 'Error inesperado');
       } finally {
         setLoading(false);
       }

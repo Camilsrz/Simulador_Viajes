@@ -1,5 +1,6 @@
-import React from "react";
 import type { Option } from "../types";
+import { api } from '../api/api';
+
 
 interface StepSummaryProps {
   destination: Option;
@@ -22,31 +23,25 @@ export const StepSummary: React.FC<StepSummaryProps> = ({
   travelId,
   back,
 }) => {
+
   const downloadPDF = async () => {
     try {
-      const response = await fetch(
-        `http://localhost:3000/travels/${travelId}/export?format=pdf`,
-        {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-        }
-      );
+      const response = await api.get<Blob>(`/travels/${travelId}/export?format=pdf`, {
+        responseType: 'blob',
+      });
 
-      if (!response.ok) throw new Error("Error al generar PDF");
-
-      const blob = await response.blob();
-      const url = window.URL.createObjectURL(blob);
-      const a = document.createElement("a");
+      const url = window.URL.createObjectURL(response.data);
+      const a = document.createElement('a');
       a.href = url;
       a.download = `viaje.pdf`;
       document.body.appendChild(a);
       a.click();
       a.remove();
       window.URL.revokeObjectURL(url);
+
     } catch (err) {
       console.error(err);
-      alert("Error al descargar el PDF");
+      alert('Error al descargar el PDF');
     }
   };
 
@@ -65,24 +60,12 @@ export const StepSummary: React.FC<StepSummaryProps> = ({
           color: "#1a1a1a",
         }}
       >
-        <p><strong>Destino:</strong> {destination.title} — ${" "}
-          {destination.price.toLocaleString("es-CO")}
-        </p>
-
-        <p><strong>Alojamiento:</strong> {lodging.title} — ${" "}
-          {lodging.price.toLocaleString("es-CO")}
-        </p>
-
-        <p><strong>Transporte:</strong> {transport.title} — ${" "}
-          {transport.price.toLocaleString("es-CO")}
-        </p>
-
+        <p><strong>Destino:</strong> {destination.title} — ${destination.price.toLocaleString("es-CO")}</p>
+        <p><strong>Alojamiento:</strong> {lodging.title} — ${lodging.price.toLocaleString("es-CO")}</p>
+        <p><strong>Transporte:</strong> {transport.title} — ${transport.price.toLocaleString("es-CO")}</p>
         <p><strong>Días:</strong> {days}</p>
-
         <p><strong>Viajeros:</strong> {travelers}</p>
-
         <p><strong>Actividades:</strong></p>
-
         <ul style={{ marginLeft: "16px" }}>
           {activities.length > 0 ? (
             activities.map((a, i) => (
